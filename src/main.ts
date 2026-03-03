@@ -1,4 +1,4 @@
-import { Plugin } from "obsidian";
+import { Plugin, TFile } from "obsidian";
 import { AuthState, ConnectionState, DEFAULT_SETTINGS, LLMBlocksSettings, PromptPreset } from "./types";
 import { ResponseCache } from "./cache";
 import { CodexWebSocketClient } from "./websocket-client";
@@ -8,6 +8,34 @@ import { createCalloutRerunPostProcessor } from "./callout-rerun";
 import { createInlineTemplateExtension, createFillAllTemplatesCommand } from "./inline-template";
 import { VaultEmbeddings } from "./embeddings";
 
+interface PkQmdSearchResult {
+  docid?: string;
+  score?: number;
+  file?: string;
+  title?: string;
+  snippet?: string;
+  line?: number;
+  heading?: string;
+}
+
+interface PkQmdSearchOptions {
+  backend?: "search" | "vsearch" | "query";
+  limit?: number;
+  collectionName?: string;
+  useGlobalFallback?: boolean;
+}
+
+interface PkQmdPluginAPI {
+  search: (query: string, options?: PkQmdSearchOptions) => Promise<PkQmdSearchResult[]>;
+  searchAndOpen: (query: string, options?: PkQmdSearchOptions) => Promise<PkQmdSearchResult[]>;
+  ensureCollection: () => Promise<string>;
+  refreshIndex: (source?: "manual" | "filechange") => Promise<void>;
+  resolveFile: (searchFile: string) => TFile | null;
+  openResult: (result: PkQmdSearchResult) => Promise<void>;
+  getSettings: () => Record<string, unknown>;
+  getCollectionName: () => string;
+}
+
 export default class LLMBlocksPlugin extends Plugin {
 	settings: LLMBlocksSettings = DEFAULT_SETTINGS;
 	cache = new ResponseCache();
@@ -15,6 +43,7 @@ export default class LLMBlocksPlugin extends Plugin {
 	embeddings: VaultEmbeddings | null = null;
 	private statusBarEl: HTMLElement | null = null;
 	private settingsTab: LLMBlocksSettingTab | null = null;
+	private pkqmdApi: PkQmdPluginAPI | null = null;
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
@@ -131,7 +160,48 @@ export default class LLMBlocksPlugin extends Plugin {
 		// Connect on layout ready (deferred)
 		this.app.workspace.onLayoutReady(() => {
 			this.wsClient.connect();
+			this.checkExecuteCodeIntegration();
+			this.detectPkqmdIntegration();
 		});
+	}
+
+	private detectPkqmdIntegration(): void {
+		const api = this.getPkqmdApi();
+		if (!api) {
+			console.debug("LLM Blocks: pk-qmd plugin/API not found; skip vault search integration.");
+			return;
+		}
+
+		this.pkqmdApi = api;
+		console.info(`LLM Blocks: pk-qmd API ready for collection ${api.getCollectionName()}`);
+	}
+
+	private checkExecuteCodeIntegration(): void {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const internalApp = this.app as any;
+		const hasCommand = Boolean(internalApp.commands?.getCommand("execute-code:run-all-code-blocks-in-file"));
+		const hasApi = Boolean(internalApp.plugins?.getPlugin("execute-code"));
+		if (!hasCommand && !hasApi) {
+			console.warn("LLM Blocks: Execute Code command/API not found. Install or enable Execute Code plugin for Run buttons.");
+		} else if (!hasCommand) {
+			console.debug("LLM Blocks: Execute Code command not found; API-only integration path may still be available.");
+		}
+	}
+
+	private getPkqmdApi(): PkQmdPluginAPI | null {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const appAny = this.app as any;
+		const installed = appAny.plugins?.getPlugin?.("pk-qmd");
+		if (!installed || typeof installed.getAPI !== "function") {
+			return null;
+		}
+
+		const api: PkQmdPluginAPI = installed.getAPI();
+		if (!api?.search || !api?.openResult) {
+			return null;
+		}
+
+		return api;
 	}
 
 	onunload(): void {

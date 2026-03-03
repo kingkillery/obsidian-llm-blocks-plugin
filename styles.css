@@ -423,6 +423,36 @@
 	border-color: var(--interactive-accent);
 }
 
+.llm-block-runall-btn {
+	font-size: var(--font-ui-small);
+	padding: 3px 10px;
+	border-radius: var(--radius-s);
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border: 1px solid var(--interactive-accent);
+	cursor: pointer;
+}
+
+.llm-block-runall-btn:hover {
+	background: var(--interactive-accent-hover);
+}
+
+.llm-block-runllm-btn {
+	font-size: var(--font-ui-small);
+	padding: 3px 10px;
+	border-radius: var(--radius-s);
+	background: var(--background-secondary);
+	color: var(--text-normal);
+	border: 1px solid var(--background-modifier-border);
+	cursor: pointer;
+}
+
+.llm-block-runllm-btn:hover {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border-color: var(--interactive-accent);
+}
+
 .llm-block-clear-btn {
 	background: var(--background-secondary);
 	color: var(--text-muted);
