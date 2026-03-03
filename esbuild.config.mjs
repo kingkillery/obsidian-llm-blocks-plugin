@@ -22,6 +22,7 @@ esbuild
 			"@lezer/common",
 			"@lezer/highlight",
 			"@lezer/lr",
+			"@huggingface/transformers",
 			...builtins,
 		],
 		format: "cjs",

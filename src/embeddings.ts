@@ -27,9 +27,17 @@ export class VaultEmbeddings {
 		this.initializing = true;
 
 		try {
-			// Dynamic import — the library is bundled but only loaded here
+			// Dynamic import — external, only loaded on first @vault use
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const transformers: any = await import("@huggingface/transformers");
+			let transformers: any;
+			try {
+				transformers = await import("@huggingface/transformers");
+			} catch {
+				throw new Error(
+					"@huggingface/transformers is not available in this environment. " +
+					"@vault scope search requires the Transformers.js package."
+				);
+			}
 
 			// Configure environment
 			if (transformers.env) {
