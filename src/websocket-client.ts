@@ -28,6 +28,7 @@ interface DirectConfig {
 
 interface QueryOptions {
 	threadId?: string;
+	directConfig?: DirectConfig;
 }
 
 export class CodexWebSocketClient extends Events {
@@ -123,6 +124,10 @@ export class CodexWebSocketClient extends Events {
 	}
 
 	async query(prompt: string, options?: QueryOptions): Promise<QueryResult> {
+		if (options?.directConfig) {
+			return this.queryViaDirectApi(prompt, options.directConfig, options);
+		}
+
 		const direct = this.getDirectConfig();
 		if (direct) {
 			return this.queryViaDirectApi(prompt, direct, options);

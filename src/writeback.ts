@@ -1,4 +1,4 @@
-import type { WritebackDirective, ParsedLLMBlock } from "./types";
+import type { WritebackDirective, ScopeDirective, ParsedLLMBlock } from "./types";
 
 /**
  * Parse the raw source of a ```llm block into directive, prompt, and preset.
@@ -17,6 +17,7 @@ export function parseLLMBlock(source: string): ParsedLLMBlock {
 
 	let directive: WritebackDirective = "keep";
 	let presetId = "";
+	let scope: ScopeDirective = "prompt";
 	let promptStartLine = 0;
 
 	// Check if the first line contains any directive tokens
@@ -35,10 +36,19 @@ export function parseLLMBlock(source: string): ParsedLLMBlock {
 		if (presetMatch) {
 			presetId = presetMatch[1];
 		}
+
+		// Parse scope directive
+		if (/\b@vault\b/i.test(firstLine)) {
+			scope = "vault";
+		} else if (/\b@linked\b/i.test(firstLine)) {
+			scope = "linked";
+		} else if (/\b@file\b/i.test(firstLine)) {
+			scope = "file";
+		}
 	}
 
 	const prompt = lines.slice(promptStartLine).join("\n").trim();
-	return { directive, prompt, presetId };
+	return { directive, prompt, presetId, scope };
 }
 
 /**
@@ -58,6 +68,7 @@ export function buildReplacement(
 	prompt: string,
 	response: string,
 	directive: WritebackDirective,
+	scope: ScopeDirective = "prompt",
 ): string {
 	if (directive === "consume") {
 		return response;
@@ -65,8 +76,9 @@ export function buildReplacement(
 
 	// @keep: build callout + response + end marker
 	const title = buildCalloutTitle(prompt);
+	const scopeMeta = scope !== "prompt" ? `|${scope}` : "";
 	const calloutLines = prompt.split(/\r?\n/).map((line) => `> ${line}`);
-	const callout = `> [!llm]- ${title}\n${calloutLines.join("\n")}`;
+	const callout = `> [!llm${scopeMeta}]- ${title}\n${calloutLines.join("\n")}`;
 	return `${callout}\n\n${response}\n%%/llm%%`;
 }
 
@@ -125,6 +137,7 @@ export function applyWriteback(
 		parsed.prompt,
 		response,
 		directive,
+		parsed.scope,
 	);
 
 	const result =
@@ -159,18 +172,25 @@ export function applyRerunWriteback(
 	const calloutLines = prompt.split(/\r?\n/).map((line) => `> ${line}`);
 	const calloutBody = calloutLines.join("\n");
 
-	// Search for the callout header pattern followed by the prompt body
-	const calloutHeaderPattern = "> [!llm]-";
+	// Search for callout headers: > [!llm]- or > [!llm|scope]-
+	const calloutPrefix = "> [!llm";
 	let searchStart = 0;
 	let calloutEnd = -1;
 
 	while (searchStart < normalized.length) {
-		const headerIdx = normalized.indexOf(calloutHeaderPattern, searchStart);
+		const headerIdx = normalized.indexOf(calloutPrefix, searchStart);
 		if (headerIdx === -1) break;
 
 		// Find the end of the callout header line
 		const headerLineEnd = normalized.indexOf("\n", headerIdx);
 		if (headerLineEnd === -1) break;
+
+		// Verify this is a valid llm callout header (with optional scope metadata)
+		const headerLine = normalized.slice(headerIdx, headerLineEnd);
+		if (!/^> \[!llm(?:\|[a-z]+)?\]-/.test(headerLine)) {
+			searchStart = headerLineEnd + 1;
+			continue;
+		}
 
 		// Check if the callout body follows
 		const bodyStart = headerLineEnd + 1;

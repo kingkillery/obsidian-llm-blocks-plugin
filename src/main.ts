@@ -6,11 +6,13 @@ import { LLMBlockRenderer } from "./renderer";
 import { LLMBlocksSettingTab } from "./settings";
 import { createCalloutRerunPostProcessor } from "./callout-rerun";
 import { createInlineTemplateExtension, createFillAllTemplatesCommand } from "./inline-template";
+import { VaultEmbeddings } from "./embeddings";
 
 export default class LLMBlocksPlugin extends Plugin {
 	settings: LLMBlocksSettings = DEFAULT_SETTINGS;
 	cache = new ResponseCache();
 	wsClient!: CodexWebSocketClient;
+	embeddings: VaultEmbeddings | null = null;
 	private statusBarEl: HTMLElement | null = null;
 	private settingsTab: LLMBlocksSettingTab | null = null;
 
@@ -18,6 +20,9 @@ export default class LLMBlocksPlugin extends Plugin {
 		await this.loadSettings();
 
 		this.wsClient = new CodexWebSocketClient(this.settings);
+
+		// Vault embeddings (lazy — initialized on first @vault use, not here)
+		this.embeddings = new VaultEmbeddings(this.app);
 
 		// Status bar
 		this.statusBarEl = this.addStatusBarItem();
@@ -48,7 +53,11 @@ export default class LLMBlocksPlugin extends Plugin {
 				this.wsClient,
 				ctx.sourcePath,
 				ctx,
-				{ promptPresets: this.parsePromptPresets(this.settings.promptPresetsJson) },
+				{
+					promptPresets: this.parsePromptPresets(this.settings.promptPresetsJson),
+					embeddings: this.embeddings,
+					activeProviderId: this.settings.activeProviderId,
+				},
 			);
 			ctx.addChild(renderer);
 		});
@@ -72,6 +81,8 @@ export default class LLMBlocksPlugin extends Plugin {
 					{
 						initialPresetId,
 						promptPresets: this.parsePromptPresets(this.settings.promptPresetsJson),
+						embeddings: this.embeddings,
+						activeProviderId: this.settings.activeProviderId,
 					},
 				);
 				ctx.addChild(renderer);
@@ -80,7 +91,7 @@ export default class LLMBlocksPlugin extends Plugin {
 
 		// Register [!llm] callout re-run post-processor
 		this.registerMarkdownPostProcessor(
-			createCalloutRerunPostProcessor(this.app, this.wsClient),
+			createCalloutRerunPostProcessor(this.app, this.wsClient, this.embeddings),
 		);
 
 		// Register CM6 extension for {{llm: prompt}} inline templates
@@ -125,6 +136,7 @@ export default class LLMBlocksPlugin extends Plugin {
 
 	onunload(): void {
 		this.wsClient.disconnect();
+		this.embeddings?.dispose();
 	}
 
 	async loadSettings(): Promise<void> {

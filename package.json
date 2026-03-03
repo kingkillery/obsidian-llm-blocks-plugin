@@ -7,6 +7,9 @@
 		"dev": "node esbuild.config.mjs",
 		"build": "node esbuild.config.mjs production"
 	},
+	"dependencies": {
+		"@huggingface/transformers": "^3.0.0"
+	},
 	"devDependencies": {
 		"@types/node": "^20.11.0",
 		"builtin-modules": "^3.3.0",

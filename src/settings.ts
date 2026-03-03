@@ -1,6 +1,7 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import type LLMBlocksPlugin from "./main";
 import type { CustomModelConfig, PromptPreset } from "./types";
+import { BUILT_IN_PROVIDERS } from "./types";
 
 function parseCustomModels(raw: string): CustomModelConfig[] {
 	const trimmed = raw.trim();
@@ -41,6 +42,24 @@ export class LLMBlocksSettingTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
+
+		// Active provider selector
+		containerEl.createEl("h3", { text: "Active Provider" });
+
+		new Setting(containerEl)
+			.setName("Default provider for LLM blocks")
+			.setDesc("Provider used when opening a new LLM block. Can be overridden per-block using the dropdown next to Run.")
+			.addDropdown((dropdown) => {
+				for (const p of BUILT_IN_PROVIDERS) {
+					dropdown.addOption(p.id, p.displayName);
+				}
+				dropdown
+					.setValue(this.plugin.settings.activeProviderId || "minimax")
+					.onChange(async (value) => {
+						this.plugin.settings.activeProviderId = value;
+						await this.plugin.saveSettings();
+					});
+			});
 
 		// Connection + auth status
 		const statusDiv = containerEl.createDiv({ cls: "llm-settings-status" });

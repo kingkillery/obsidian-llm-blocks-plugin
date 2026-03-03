@@ -222,6 +222,54 @@
 	cursor: default;
 }
 
+/* Copy response button in callout title bar */
+.llm-copy-btn {
+	font-size: var(--font-ui-smaller);
+	padding: 2px 8px;
+	margin-left: 4px;
+	border-radius: var(--radius-s);
+	background: var(--background-modifier-border);
+	color: var(--text-muted);
+	border: none;
+	cursor: pointer;
+	line-height: 1.4;
+}
+
+.llm-copy-btn:hover {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+}
+
+/* Response region wrapper for floating copy */
+.llm-response-region {
+	position: relative;
+}
+
+.llm-response-region .llm-copy-float {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	opacity: 0;
+	transition: opacity 0.15s ease;
+	font-size: var(--font-ui-smaller);
+	padding: 2px 6px;
+	border-radius: var(--radius-s);
+	background: var(--background-secondary);
+	color: var(--text-muted);
+	border: 1px solid var(--background-modifier-border);
+	cursor: pointer;
+	z-index: 1;
+}
+
+.llm-response-region:hover .llm-copy-float {
+	opacity: 1;
+}
+
+.llm-response-region .llm-copy-float:hover {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+}
+
 /* Inline template play button */
 .llm-inline-play-btn {
 	display: inline-flex;
@@ -253,4 +301,207 @@
 
 .llm-inline-play-btn--loading {
 	animation: llm-spin 0.8s linear infinite;
+}
+
+/* ── Init hints ─────────────────────────────────────────────────────── */
+.llm-block-hints {
+	display: flex;
+	gap: 8px;
+	padding: 8px 12px;
+	background: var(--background-modifier-info);
+	border-bottom: 1px solid var(--background-modifier-border);
+	font-size: var(--font-ui-small);
+	color: var(--text-muted);
+}
+
+.llm-block-hints-icon {
+	flex-shrink: 0;
+	font-size: 14px;
+	line-height: 1.4;
+	color: var(--interactive-accent);
+}
+
+.llm-block-hints-body p {
+	margin: 0 0 4px;
+	color: var(--text-normal);
+	font-weight: var(--font-semibold);
+}
+
+.llm-block-hints-body ul {
+	margin: 0;
+	padding-left: 16px;
+}
+
+.llm-block-hints-body li {
+	margin: 1px 0;
+	color: var(--text-muted);
+}
+
+.llm-block-hints-body li code {
+	font-size: var(--font-ui-smaller);
+	background: var(--background-secondary);
+	border-radius: 3px;
+	padding: 0 3px;
+}
+
+/* ── Output preview ──────────────────────────────────────────────────── */
+.llm-block-output {
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+.llm-block-output-bar {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 10px;
+	background: var(--background-secondary);
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.llm-block-output-bar--top {
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.llm-block-output-bar--bottom {
+	border-top: 1px solid var(--background-modifier-border);
+	border-bottom: none;
+	justify-content: flex-end;
+}
+
+.llm-block-output-label {
+	font-size: var(--font-ui-small);
+	font-weight: var(--font-semibold);
+	color: var(--text-muted);
+	flex: 1;
+}
+
+.llm-block-output-body {
+	padding: 10px 14px;
+	background: var(--background-primary);
+}
+
+.llm-block-output-body > :first-child { margin-top: 0; }
+.llm-block-output-body > :last-child  { margin-bottom: 0; }
+
+.llm-copy-icon {
+	font-size: 14px;
+	padding: 2px 6px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	background: var(--background-secondary);
+	color: var(--text-muted);
+	cursor: pointer;
+	line-height: 1;
+	min-width: 26px;
+	text-align: center;
+}
+
+.llm-copy-icon:hover {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border-color: var(--interactive-accent);
+}
+
+.llm-block-save-btn,
+.llm-block-commit-btn,
+.llm-block-clear-btn {
+	font-size: var(--font-ui-small);
+	padding: 3px 10px;
+	border-radius: var(--radius-s);
+	cursor: pointer;
+	border: 1px solid var(--background-modifier-border);
+}
+
+.llm-block-save-btn {
+	background: var(--background-secondary);
+	color: var(--text-normal);
+}
+
+.llm-block-save-btn:hover {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border-color: var(--interactive-accent);
+}
+
+.llm-block-clear-btn {
+	background: var(--background-secondary);
+	color: var(--text-muted);
+}
+
+.llm-block-clear-btn:hover {
+	background: var(--background-modifier-error);
+	color: var(--text-error);
+	border-color: var(--text-error);
+}
+
+/* Provider dropdown — matches preset select */
+.llm-block-provider-select {
+	max-width: 160px;
+	height: var(--input-height);
+	font-size: var(--font-ui-small);
+	background: var(--background-primary);
+	color: var(--text-normal);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+}
+
+/* Additional prompts area */
+.llm-block-additional-prompts {
+	padding: 0 12px 10px;
+}
+
+.llm-block-additional-prompt {
+	display: flex;
+	gap: 4px;
+	margin-bottom: 6px;
+	align-items: flex-start;
+}
+
+.llm-block-additional-prompt textarea {
+	flex: 1;
+	min-height: 48px;
+	resize: vertical;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	padding: 6px 8px;
+	font-size: var(--font-ui-small);
+	background: var(--background-primary-alt);
+	color: var(--text-normal);
+	font-family: var(--font-monospace);
+}
+
+.llm-remove-btn {
+	flex-shrink: 0;
+	padding: 2px 6px;
+	font-size: var(--font-ui-small);
+	line-height: 1.4;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	background: var(--background-secondary);
+	color: var(--text-muted);
+	cursor: pointer;
+}
+
+.llm-remove-btn:hover {
+	background: var(--background-modifier-error);
+	color: var(--text-error);
+	border-color: var(--background-modifier-error);
+}
+
+.llm-block-add-prompt-btn {
+	display: block;
+	margin: 0 12px 10px;
+	padding: 3px 8px;
+	font-size: var(--font-ui-small);
+	background: transparent;
+	color: var(--text-muted);
+	border: 1px dashed var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	cursor: pointer;
+}
+
+.llm-block-add-prompt-btn:hover {
+	color: var(--text-normal);
+	border-color: var(--interactive-accent);
+	background: var(--background-primary-alt);
 }
