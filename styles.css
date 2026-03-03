@@ -535,3 +535,148 @@
 	border-color: var(--interactive-accent);
 	background: var(--background-primary-alt);
 }
+
+.pk-qmd-search-input {
+	width: 100%;
+	margin-bottom: 0.5rem;
+	padding: 0.4rem 0.55rem;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	background: var(--background-primary);
+	color: var(--text-normal);
+}
+
+.pk-qmd-search-status {
+	opacity: 0.8;
+	font-size: var(--font-ui-small);
+	margin: 0.25rem 0 0.5rem;
+}
+
+.llmblocks-pkqmd-recent {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	flex-wrap: wrap;
+	margin-bottom: 0.5rem;
+}
+
+.llmblocks-pkqmd-recent-label {
+	font-size: var(--font-ui-smaller);
+	opacity: 0.75;
+}
+
+.llmblocks-pkqmd-recent-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.3rem;
+}
+
+.llmblocks-pkqmd-shortcut-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.2rem;
+}
+
+.llmblocks-pkqmd-recent-chip,
+.llmblocks-pkqmd-recent-clear {
+	font-size: var(--font-ui-smaller);
+	height: 1.7rem;
+	padding: 0 0.45rem;
+	border-radius: var(--radius-s);
+	border: 1px solid var(--background-modifier-border);
+	background: var(--background-secondary);
+	color: var(--text-muted);
+}
+
+.llmblocks-pkqmd-shortcut-pin,
+.llmblocks-pkqmd-shortcut-remove,
+.llmblocks-pkqmd-pin-current {
+	font-size: var(--font-ui-smaller);
+	height: 1.7rem;
+	padding: 0 0.4rem;
+	border-radius: var(--radius-s);
+	border: 1px solid var(--background-modifier-border);
+	background: var(--background-secondary);
+	color: var(--text-muted);
+}
+
+.llmblocks-pkqmd-pinned-chip {
+	background: color-mix(in srgb, var(--interactive-accent) 16%, var(--background-secondary));
+	color: var(--text-normal);
+}
+
+.llmblocks-pkqmd-recent-chip:hover,
+.llmblocks-pkqmd-recent-clear:hover,
+.llmblocks-pkqmd-shortcut-pin:hover,
+.llmblocks-pkqmd-shortcut-remove:hover,
+.llmblocks-pkqmd-pin-current:hover {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border-color: var(--interactive-accent);
+}
+
+.pk-qmd-search-results {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.llmblocks-pkqmd-result-row {
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	padding: 0.5rem;
+	background: var(--background-primary-alt);
+}
+
+.llmblocks-pkqmd-result-row.is-active {
+	border-color: var(--interactive-accent);
+	box-shadow: 0 0 0 1px var(--interactive-accent);
+}
+
+.llmblocks-pkqmd-result-title {
+	font-weight: var(--font-semibold);
+}
+
+.llmblocks-pkqmd-result-meta {
+	font-size: var(--font-ui-smaller);
+	opacity: 0.8;
+	margin: 0.15rem 0 0.35rem;
+}
+
+.llmblocks-pkqmd-result-snippet {
+	margin: 0;
+	white-space: pre-wrap;
+	font-size: var(--font-ui-smaller);
+	font-family: var(--font-monospace);
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	padding: 0.35rem 0.45rem;
+}
+
+.llmblocks-pkqmd-result-actions {
+	margin-top: 0.35rem;
+	display: flex;
+	gap: 0.35rem;
+}
+
+.llmblocks-pkqmd-result-actions button {
+	font-size: var(--font-ui-smaller);
+	padding: 0 0.35rem;
+	height: 1.8rem;
+}
+
+.llmblocks-pkqmd-controls {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-wrap: wrap;
+	font-size: var(--font-ui-smaller);
+	margin-bottom: 0.45rem;
+}
+
+.llmblocks-pkqmd-controls-group {
+	display: inline-flex;
+	gap: 0.25rem;
+	align-items: center;
+}
