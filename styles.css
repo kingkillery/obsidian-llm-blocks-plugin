@@ -1,0 +1,256 @@
+/* LLM Blocks - Obsidian-native styling */
+
+.llm-block {
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	background: var(--background-secondary-alt);
+	margin: 0.75em 0;
+	overflow: hidden;
+}
+
+.llm-block-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	padding: 8px 12px;
+	background: var(--background-secondary);
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.llm-block-title-group {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+
+.llm-block-label {
+	font-size: var(--font-ui-small);
+	font-weight: var(--font-semibold);
+	color: var(--text-muted);
+	letter-spacing: 0.02em;
+}
+
+.llm-block-preset-pill {
+	font-size: var(--font-ui-smaller);
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: var(--interactive-accent-hover);
+	color: var(--text-on-accent);
+	white-space: nowrap;
+}
+
+.llm-block-controls {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.llm-block-preset-select {
+	max-width: 220px;
+	height: var(--input-height);
+	font-size: var(--font-ui-small);
+	background: var(--background-primary);
+	color: var(--text-normal);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+}
+
+.llm-block-run-btn,
+.llm-followup-add-btn,
+.llm-followup-send-btn,
+.llm-followup-cancel-btn {
+	font-size: var(--font-ui-small);
+}
+
+.llm-block-run-btn:disabled {
+	opacity: 0.65;
+}
+
+.llm-block-warning {
+	padding: 8px 12px;
+	font-size: var(--font-ui-small);
+	color: var(--text-warning);
+	background: var(--background-modifier-warning);
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.llm-block-prompt {
+	padding: 10px 12px;
+	background: var(--background-primary);
+}
+
+.llm-block-prompt pre {
+	margin: 0;
+	white-space: pre-wrap;
+	font-family: var(--font-monospace);
+	font-size: var(--font-ui-small);
+	line-height: 1.45;
+	color: var(--text-normal);
+}
+
+.llm-block-spinner {
+	padding: 12px;
+	text-align: center;
+	color: var(--text-muted);
+	font-style: italic;
+}
+
+.llm-block-spinner::before {
+	content: "";
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	border: 2px solid var(--text-faint);
+	border-top-color: var(--interactive-accent);
+	border-radius: 50%;
+	animation: llm-spin 0.8s linear infinite;
+	margin-right: 8px;
+	vertical-align: middle;
+}
+
+@keyframes llm-spin {
+	to { transform: rotate(360deg); }
+}
+
+.llm-block-response {
+	border-top: 1px solid var(--background-modifier-border);
+	background: var(--background-primary);
+}
+
+.llm-block-response > summary {
+	padding: 8px 12px;
+	cursor: pointer;
+	font-size: var(--font-ui-small);
+	font-weight: var(--font-semibold);
+	color: var(--text-muted);
+	background: var(--background-secondary);
+	user-select: none;
+	list-style: none;
+}
+
+.llm-block-response > summary::before {
+	content: "\25B8 ";
+}
+
+.llm-block-response[open] > summary::before {
+	content: "\25BE ";
+}
+
+.llm-block-content {
+	padding: 10px 12px;
+}
+
+.llm-followup {
+	padding: 10px 12px 12px;
+	border-top: 1px solid var(--background-modifier-border);
+	background: var(--background-primary);
+}
+
+.llm-followup-composer {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.llm-followup-input {
+	width: 100%;
+	resize: vertical;
+	min-height: 64px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	padding: 8px;
+	font-size: var(--font-ui-small);
+	background: var(--background-primary-alt);
+	color: var(--text-normal);
+}
+
+.llm-followup-actions {
+	display: flex;
+	gap: 8px;
+}
+
+.llm-block-error {
+	padding: 8px 12px;
+	color: var(--text-error);
+	background: var(--background-modifier-error);
+	border-top: 1px solid var(--background-modifier-border);
+	font-size: var(--font-ui-small);
+}
+
+.llm-dot {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	margin-right: 4px;
+	vertical-align: middle;
+}
+
+.llm-dot-green { background-color: #4ade80; }
+.llm-dot-yellow { background-color: #facc15; }
+.llm-dot-red { background-color: #f87171; }
+
+.llm-settings-status {
+	margin-bottom: 16px;
+	padding: 8px 12px;
+	background-color: var(--background-secondary);
+	border-radius: var(--radius-s);
+	font-size: var(--font-ui-small);
+}
+
+/* Callout re-run button */
+.llm-rerun-btn {
+	font-size: var(--font-ui-smaller);
+	padding: 2px 8px;
+	margin-left: 8px;
+	border-radius: var(--radius-s);
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border: none;
+	cursor: pointer;
+	line-height: 1.4;
+}
+
+.llm-rerun-btn:hover {
+	background: var(--interactive-accent-hover);
+}
+
+.llm-rerun-btn:disabled {
+	opacity: 0.65;
+	cursor: default;
+}
+
+/* Inline template play button */
+.llm-inline-play-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	margin-left: 2px;
+	padding: 0;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	background: var(--background-secondary);
+	color: var(--interactive-accent);
+	font-size: 10px;
+	cursor: pointer;
+	vertical-align: middle;
+	line-height: 1;
+}
+
+.llm-inline-play-btn:hover {
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+}
+
+.llm-inline-play-btn[disabled] {
+	opacity: 0.65;
+	cursor: default;
+}
+
+.llm-inline-play-btn--loading {
+	animation: llm-spin 0.8s linear infinite;
+}
